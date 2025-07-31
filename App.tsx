@@ -6,6 +6,8 @@ import ThreadDetailView from './components/KanbanBoard';
 import InputModal from './components/InputModal';
 import ConversationViewerModal from './components/ExportModal';
 import useLocalStorage from './services/useLocalStorage';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 type ModalMode = 'addThread' | 'editThread';
 
@@ -51,6 +53,31 @@ const App: React.FC = () => {
     }
   }, [threads, activeThreadId]);
 
+  // --- EXPORT ALL DATA ---
+  const handleExportAllData = useCallback(async () => {
+    const zip = new JSZip();
+    const dataFolder = zip.folder('data');
+
+    // Add threads data
+    dataFolder?.file('threads.json', JSON.stringify(threads, null, 2));
+
+    // Add conversations data, organized by thread
+    const conversationsFolder = dataFolder?.folder('conversations');
+    uploadedConversations.forEach(conv => {
+      const threadTitle = threads.find(t => t.id === conv.threadId)?.title || 'unthreaded';
+      const fileName = `${threadTitle}/${conv.title.replace(/[^a-z0-9]/gi, '_')}.txt`; // Sanitize filename
+      conversationsFolder?.file(fileName, conv.content);
+    });
+
+    try {
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, 'mobi-gpt-llm-planner_data.zip');
+      alert('데이터 내보내기 완료!');
+    } catch (error) {
+      console.error('ZIP 파일 생성 중 오류 발생:', error);
+      alert('데이터 내보내기 실패!');
+    }
+  }, [threads, uploadedConversations]);
 
   // --- CRUD & FILE HANDLING ---
   const handleFileUpload = useCallback((file: File) => {
@@ -133,6 +160,7 @@ const App: React.FC = () => {
         onAddThread={() => handleOpenModal('addThread')}
         onUpdateThread={(id) => handleOpenModal('editThread', id)}
         onDeleteThread={handleDeleteThread}
+        onExportAllData={handleExportAllData}
       />
       
       <main className="flex-1 flex flex-col h-full min-w-0">

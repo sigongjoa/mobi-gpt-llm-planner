@@ -11,9 +11,10 @@ interface ThreadListProps {
   onAddThread: () => void;
   onUpdateThread: (id: string) => void;
   onDeleteThread: (id: string) => void;
+  onExportAllData: () => void;
 }
 
-const ThreadList: React.FC<ThreadListProps> = ({ threads, activeThreadId, setActiveThreadId, isCollapsed, onToggle, onAddThread, onUpdateThread, onDeleteThread }) => {
+const ThreadList: React.FC<ThreadListProps> = ({ threads, activeThreadId, setActiveThreadId, isCollapsed, onToggle, onAddThread, onUpdateThread, onDeleteThread, onExportAllData }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const sortedThreads = [...threads].sort((a, b) => new Date(b.lastUpdatedAt).getTime() - new Date(a.lastUpdatedAt).getTime());
@@ -119,6 +120,17 @@ const ThreadList: React.FC<ThreadListProps> = ({ threads, activeThreadId, setAct
           ))}
         </ul>
       </div>
+
+      {!isCollapsed && (
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={onExportAllData}
+            className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+          >
+            모든 데이터 내보내기 (ZIP)
+          </button>
+        </div>
+      )}
     </aside>
   );
 };
