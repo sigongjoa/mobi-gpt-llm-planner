@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { type Thread, type UploadedConversation } from './types';
+import { INITIAL_THREADS } from './constants';
 import ThreadList from './components/ThreadList';
 import ThreadDetailView from './components/KanbanBoard';
 import InputModal from './components/InputModal';
