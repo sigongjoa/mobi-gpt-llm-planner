@@ -5,6 +5,7 @@ import ThreadList from './components/ThreadList';
 import ThreadDetailView from './components/KanbanBoard';
 import InputModal from './components/InputModal';
 import ConversationViewerModal from './components/ExportModal';
+import useLocalStorage from './services/useLocalStorage';
 
 type ModalMode = 'addThread' | 'editThread';
 
@@ -18,8 +19,8 @@ interface ModalState {
 }
 
 const App: React.FC = () => {
-  const [threads, setThreads] = useState<Thread[]>(INITIAL_THREADS);
-  const [uploadedConversations, setUploadedConversations] = useState<UploadedConversation[]>([]);
+  const [threads, setThreads] = useLocalStorage<Thread[]>('threads', INITIAL_THREADS);
+  const [uploadedConversations, setUploadedConversations] = useLocalStorage<UploadedConversation[]>('uploadedConversations', []);
   
   const [activeThreadId, setActiveThreadId] = useState<string>('thread-1');
   const [viewingConversation, setViewingConversation] = useState<UploadedConversation | null>(null);
