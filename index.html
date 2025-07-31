@@ -2,12 +2,42 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI 프로젝트 대시보드</title>
-    <script type="module" crossorigin src="/mobi-gpt-llm-planner/assets/index-4CMhcbuH.js"></script>
-    <link rel="stylesheet" crossorigin href="/mobi-gpt-llm-planner/assets/index-0N8X_cIM.css">
-  </head>
-  <body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom scrollbar for webkit browsers */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9; /* gray-100 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1; /* gray-300 */
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8; /* gray-400 */
+      }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.12.0"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-BRx9SlSJ.js"></script>
+</head>
+  <body class="bg-gray-100 text-slate-800">
     <div id="root"></div>
   </body>
 </html>
