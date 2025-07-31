@@ -1,5 +1,10 @@
 name: Deploy to GitHub Pages
 
+permissions:
+  contents: read        # 기본 코드 체크아웃 용
+  pages: write          # gh-pages 브랜치 푸시용
+  id-token: write       # peaceiris 액션 내부 토큰용
+
 on: 
   push:
     branches:
