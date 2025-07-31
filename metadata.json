@@ -1,0 +1,6 @@
+{
+  "name": "AI-Powered Project Dashboard",
+  "description": "An intelligent project management dashboard that integrates a conversational AI, a Kanban board for task management, and a feature to export conversations into scripts for short-form video content.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
