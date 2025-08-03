@@ -104,12 +104,12 @@ const ThreadList: React.FC<ThreadListProps> = ({ threads, activeThreadId, setAct
                     <div className="flex justify-between items-center">
                         <h3 className="font-semibold text-slate-800 truncate pr-2">{thread.title}</h3>
                         <div className="flex-shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100">
-                            <button onClick={(e) => handleUpdate(e, thread.id)} className="p-1 rounded-md text-slate-500 hover:bg-gray-200 hover:text-slate-800" aria-label="스레드 이름 변경">
+                            <div onClick={(e) => handleUpdate(e, thread.id)} className="p-1 rounded-md text-slate-500 hover:bg-gray-200 hover:text-slate-800 cursor-pointer" role="button" aria-label="스레드 이름 변경">
                                 <PencilIcon className="w-4 h-4" />
-                            </button>
-                            <button onClick={(e) => handleDelete(e, thread.id)} className="p-1 rounded-md text-slate-500 hover:bg-gray-200 hover:text-red-600" aria-label="스레드 삭제">
+                            </div>
+                            <div onClick={(e) => handleDelete(e, thread.id)} className="p-1 rounded-md text-slate-500 hover:bg-gray-200 hover:text-red-600 cursor-pointer" role="button" aria-label="스레드 삭제">
                                 <TrashIcon className="w-4 h-4" />
-                            </button>
+                            </div>
                         </div>
                     </div>
                     <p className="text-sm text-slate-500">{timeAgo(thread.lastUpdatedAt)}</p>

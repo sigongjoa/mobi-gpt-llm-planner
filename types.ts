@@ -10,6 +10,7 @@ export interface UploadedConversation {
   title: string;
   content: string;
   uploadedAt: string;
+  modifications?: string;
 }
 
 export interface Message {

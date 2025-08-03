@@ -6,6 +6,7 @@ interface ConversationViewerModalProps {
   isOpen: boolean;
   onClose: () => void;
   conversation: UploadedConversation | null;
+  onSaveModification: (conversationId: string, modification: string) => void;
 }
 
 const CharacterInfoCard: React.FC<{character: Character}> = ({ character }) => (
@@ -161,8 +162,25 @@ const JsonViewer: React.FC<{ data: MabinogiData }> = ({ data }) => {
     );
 };
 
-const ConversationViewerModal: React.FC<ConversationViewerModalProps> = ({ isOpen, onClose, conversation }) => {
+const ConversationViewerModal: React.FC<ConversationViewerModalProps> = ({ isOpen, onClose, conversation, onSaveModification }) => {
   if (!isOpen || !conversation) return null;
+
+  const [activeTab, setActiveTab] = useState<'content' | 'modifications'>('content');
+  const [currentModification, setCurrentModification] = useState<string>('');
+
+  useEffect(() => {
+    if (conversation) {
+      setCurrentModification(conversation.modifications || '');
+      setActiveTab('content'); // Reset to content tab when conversation changes
+    }
+  }, [conversation]);
+
+  const handleSave = () => {
+    if (conversation) {
+      onSaveModification(conversation.id, currentModification);
+      alert('수정 사항이 저장되었습니다.');
+    }
+  };
 
   const parsedData = useMemo(() => {
     try {
@@ -199,17 +217,62 @@ const ConversationViewerModal: React.FC<ConversationViewerModalProps> = ({ isOpe
           </button>
         </div>
 
-        <div className="flex-grow min-h-0">
-          {parsedData ? (
-            <JsonViewer data={parsedData} />
-          ) : (
-            <textarea
-                readOnly
-                value={conversation.content}
-                className="w-full h-full bg-slate-50 border border-slate-300 rounded-lg p-4 text-slate-800 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
-                aria-label="대화 내용"
-            />
-          )}
+        <div className="flex-grow min-h-0 flex flex-col">
+          <div className="flex-shrink-0 border-b border-slate-200 mb-4">
+            <nav className="flex space-x-4" aria-label="Tabs">
+              <button
+                onClick={() => setActiveTab('content')}
+                className={`
+                  ${activeTab === 'content' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}
+                  whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm
+                `}
+              >
+                기존 대화 보기
+              </button>
+              <button
+                onClick={() => setActiveTab('modifications')}
+                className={`
+                  ${activeTab === 'modifications' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}
+                  whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm
+                `}
+              >
+                수정 사항/메모
+              </button>
+            </nav>
+          </div>
+          <div className="flex-grow overflow-y-auto">
+            {activeTab === 'content' && (
+              parsedData ? (
+                <JsonViewer data={parsedData} />
+              ) : (
+                <textarea
+                    readOnly
+                    value={conversation.content}
+                    className="w-full h-full bg-slate-50 border border-slate-300 rounded-lg p-4 text-slate-800 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+                    aria-label="대화 내용"
+                />
+              )
+            )}
+            {activeTab === 'modifications' && (
+              <div className="flex flex-col h-full">
+                <textarea
+                  value={currentModification}
+                  onChange={(e) => setCurrentModification(e.target.value)}
+                  className="w-full h-full bg-slate-50 border border-slate-300 rounded-lg p-4 text-slate-800 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 resize-none"
+                  placeholder="여기에 수정 사항이나 메모를 입력하세요..."
+                  aria-label="수정 사항 및 메모"
+                />
+                <div className="mt-4 flex justify-end">
+                  <button
+                    onClick={handleSave}
+                    className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    저장
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="mt-6 flex justify-end gap-4 flex-shrink-0">

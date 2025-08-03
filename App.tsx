@@ -65,8 +65,11 @@ const App: React.FC = () => {
     const conversationsFolder = dataFolder?.folder('conversations');
     uploadedConversations.forEach(conv => {
       const threadTitle = threads.find(t => t.id === conv.threadId)?.title || 'unthreaded';
-      const fileName = `${threadTitle}/${conv.title.replace(/[^a-z0-9]/gi, '_')}.txt`; // Sanitize filename
-      conversationsFolder?.file(fileName, conv.content);
+      const baseFileName = conv.title.replace(/[^a-z0-9]/gi, '_'); // Sanitize filename
+      conversationsFolder?.file(`${threadTitle}/${baseFileName}.txt`, conv.content);
+      if (conv.modifications) {
+        conversationsFolder?.file(`${threadTitle}/${baseFileName}_modifications.txt`, conv.modifications);
+      }
     });
 
     try {
@@ -102,6 +105,14 @@ const App: React.FC = () => {
   
   const handleDeleteConversation = useCallback((conversationId: string) => {
     setUploadedConversations(prev => prev.filter(c => c.id !== conversationId));
+  }, []);
+
+  const handleSaveConversationModification = useCallback((conversationId: string, modification: string) => {
+    setUploadedConversations(prev =>
+      prev.map(conv =>
+        conv.id === conversationId ? { ...conv, modifications: modification } : conv
+      )
+    );
   }, []);
 
   // --- MODAL AND CRUD LOGIC ---
@@ -193,6 +204,7 @@ const App: React.FC = () => {
         isOpen={!!viewingConversation}
         onClose={() => setViewingConversation(null)}
         conversation={viewingConversation}
+        onSaveModification={handleSaveConversationModification}
       />
     </div>
   );
